@@ -11,7 +11,7 @@
    `aws eks --region us-east-1 update-kubeconfig --name my-eks-cluster`
 6. Verify by running `kubectl get nodes`. This will show you 3 worker nodes up and running.
 
-=============Setting up CICD for Hellow orld project============================================
+=============Setting up CICD for Hello world project============================================
 
 1. Goto manage plugins and add your EKS cluster credentails
 2. Create a new pipeline in Jenkins and use Jenkinsfile in this repository
@@ -26,17 +26,17 @@
 6. Choose Attach policies.
 7. Run the following command to deploy container insight:
 
-`ClusterName=<my-cluster-name>
-RegionName=<my-cluster-region>
-FluentBitHttpPort='2020'
-FluentBitReadFromHead='Off'
-[[ ${FluentBitReadFromHead} = 'On' ]] && FluentBitReadFromTail='Off'|| FluentBitReadFromTail='On'
-[[ -z ${FluentBitHttpPort} ]] && FluentBitHttpServer='Off' || FluentBitHttpServer='On'
-curl https://raw.githubusercontent.com/aws-samples/amazon-cloudwatch-container-insights/latest/k8s-deployment-manifest-templates/deployment-mode/daemonset/container-insights-monitoring/quickstart/cwagent-fluent-bit-quickstart.yaml | sed 's/{{cluster_name}}/'${ClusterName}'/;s/{{region_name}}/'${RegionName}'/;s/{{http_server_toggle}}/"'${FluentBitHttpServer}'"/;s/{{http_server_port}}/"'${FluentBitHttpPort}'"/;s/{{read_from_head}}/"'${FluentBitReadFromHead}'"/;s/{{read_from_tail}}/"'${FluentBitReadFromTail}'"/' | kubectl apply -f - `
+ClusterName={my-cluster-name} <br/>
+RegionName={my-cluster-region} <br/>
+FluentBitHttpPort='2020' <br/>
+FluentBitReadFromHead='Off' <br/>
+[[ ${FluentBitReadFromHead} = 'On' ]] && FluentBitReadFromTail='Off'|| FluentBitReadFromTail='On' <br/>
+[[ -z ${FluentBitHttpPort} ]] && FluentBitHttpServer='Off' || FluentBitHttpServer='On' <br/>
+curl https://raw.githubusercontent.com/aws-samples/amazon-cloudwatch-container-insights/latest/k8s-deployment-manifest-templates/deployment-mode/daemonset/container-insights-monitoring/quickstart/cwagent-fluent-bit-quickstart.yaml | sed 's/{{cluster_name}}/'${ClusterName}'/;s/{{region_name}}/'${RegionName}'/;s/{{http_server_toggle}}/"'${FluentBitHttpServer}'"/;s/{{http_server_port}}/"'${FluentBitHttpPort}'"/;s/{{read_from_head}}/"'${FluentBitReadFromHead}'"/;s/{{read_from_tail}}/"'${FluentBitReadFromTail}'"/' | kubectl apply -f - <br/>
 
 8. <b> Set up the CloudWatch agent to collect cluster metrics </b>
 9. Create namespace for cloudwatch:
-`kubectl apply -f https://raw.githubusercontent.com/aws-samples/amazon-cloudwatch-container-insights/latest/k8s-deployment-manifest-templates/deployment-mode/daemonset/container-insights-monitoring/cloudwatch-namespace.yaml`
+` kubectl apply -f https://raw.githubusercontent.com/aws-samples/amazon-cloudwatch-container-insights/latest/k8s-deployment-manifest-templates/deployment-mode/daemonset/container-insights-monitoring/cloudwatch-namespace.yaml `
 10. To create a service account for the CloudWatch agent
 `kubectl apply -f https://raw.githubusercontent.com/aws-samples/amazon-cloudwatch-container-insights/latest/k8s-deployment-manifest-templates/deployment-mode/daemonset/container-insights-monitoring/cwagent/cwagent-serviceaccount.yaml`
 11. To create a ConfigMap for the CloudWatch agent
@@ -49,21 +49,15 @@ curl https://raw.githubusercontent.com/aws-samples/amazon-cloudwatch-container-i
 `curl -O  https://raw.githubusercontent.com/aws-samples/amazon-cloudwatch-container-insights/latest/k8s-deployment-manifest-templates/deployment-mode/daemonset/container-insights-monitoring/cwagent/cwagent-daemonset.yaml`
 15. Uncomment the port section in the cwagent-daemonset.yaml file as in the following:
 
-ports:
+ports: 
   - containerPort: 8125
    hostPort: 8125
    protocol: UDP
     
 16. Deploy the CloudWatch agent in your cluster by running the following command: `kubectl apply -f cwagent-daemonset.yaml`
 17. Validate that the agent is deployed by running the following command: kubectl get pods -n amazon-cloudwatch`
-18. Once configured you will be able to see the metrics as below for individual pods by selecting filters:
+18. Once configured you will be able to see the metrics for individual pods by selecting filters
 
-![cloudwatch filters](https://user-images.githubusercontent.com/45530974/138239708-830124a6-5ebc-49cf-b1f2-e4ca20466713.PNG)
-
-
-19. Complete cloudwatch dashboard:
-
-![CLoudwatch](https://user-images.githubusercontent.com/45530974/138239939-8a87a00f-dbee-4eb1-8661-7f54f27d51b4.PNG)
 
 
 
